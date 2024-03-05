@@ -23,6 +23,7 @@ where
     S::Error: Into<Box<dyn StdError + Send + Sync>>,
 {
     let access_token = authenticator.token(&["email"]).await?;
+    println!("access token: {:?}", access_token);
     let request = http::Request::get("https://example.com")
         .header(
             http::header::AUTHORIZATION,
@@ -30,6 +31,11 @@ where
         )
         .body(hyper::body::Body::empty())?;
     let response = client.request(request).await?;
+    println!(" ");
+    println!("-----------");
+    println!("response: {:?}",response);
+    println!("-----------");
+    println!(" ");
     drop(response); // Implementing handling of the response is left as an exercise for the reader.
     Ok(())
 }
@@ -41,6 +47,7 @@ async fn main() {
     let secret = yup_oauth2::read_service_account_key(google_credentials)
         .await
         .expect("$GOOGLE_APPLICATION_CREDENTIALS is not a valid service account key");
+    println!("{:?}", secret);
     let client = hyper::Client::builder().build(
         hyper_rustls::HttpsConnectorBuilder::new()
             .with_native_roots()
